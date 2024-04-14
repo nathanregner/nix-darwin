@@ -8,6 +8,7 @@ let
   cfg = config.nix.linux-builder;
 
   builderWithOverrides = cfg.package.override {
+    specialArgs = cfg.specialArgs;
     modules = [ cfg.config ];
   };
 
@@ -57,6 +58,19 @@ in
       description = lib.mdDoc ''
         This option specifies extra NixOS configuration for the builder. You should first use the Linux builder
         without changing the builder configuration otherwise you may not be able to build the Linux builder.
+      '';
+    };
+
+    specialArgs = mkOption {
+      type = types.lazyAttrsOf types.raw;
+      default = { };
+      example = literalExpression ''
+        { inherit inputs outputs; }
+      '';
+      description = mdDoc ''
+        An attribute set of arbitrary values that will be made available as module arguments during the resolution of builder modules provided by `config`.
+
+        Refer to the NixOS manual on `specialArgs`
       '';
     };
 
